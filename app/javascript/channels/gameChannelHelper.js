@@ -1,7 +1,8 @@
 import consumer from "./consumer"
 
 const subscribeToGameChannel = (setGame) => {
-    console.log("subscribed to Game channel")
+  console.log("subscribed to Game channel")
+  
   consumer.subscriptions.create(
     { channel: "GameChannel" },
     {
@@ -28,9 +29,13 @@ const subscribeToUserChannel = (setOpponent, currentUserId) => {
       received: data => {
         console.log("received User data, id:" + data.user.id)
         console.log("received User data, ready_for_battle:" + data.user.ready_for_battle)
+
         if (data.user.id !== currentUserId) setOpponent(data.user)
       },
       speak: function(data) {
+        console.log("speaking User data, id:" + data.user.id)
+        console.log("speaking User data, ready_for_battle:" + data.user.ready_for_battle)
+
         return this.perform("speak", data)
       }
     }

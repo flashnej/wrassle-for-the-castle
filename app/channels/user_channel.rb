@@ -7,8 +7,8 @@ class UserChannel < ApplicationCable::Channel
     user_id = data['user']['id']
     user = User.find(user_id)
     socket = { user: user }
-    binding.pry
-    GameChannel.broadcast_to('user_channel', socket)
+    # binding.pry
+    UserChannel.broadcast_to('user_channel', socket)
   end
 
   def unsubscribed
