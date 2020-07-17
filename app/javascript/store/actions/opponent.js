@@ -7,4 +7,6 @@ const setOpponent = (userData) => {
   }
 }
 
-export default setOpponent
+export default {
+  setOpponent
+}

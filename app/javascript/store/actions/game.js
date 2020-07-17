@@ -7,4 +7,6 @@ const setGame = (gameData) => {
   }
 }
 
-export default setGame
+export default {
+  setGame
+}

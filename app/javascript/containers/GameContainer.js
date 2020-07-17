@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
 import TitleScreen from '../components/TitleScreen'
 import StartGameScreen from '../components/StartGameScreen'
@@ -7,32 +8,41 @@ import GameScreenContainer from './GameScreenContainer'
 import VictoryScreen from '../components/VictoryScreen'
 import RefreshButton from '../components/RefreshButton'
 import StatusMessage from '../components/StatusMessage'
+import curUserActions from '../store/actions/currentUser.js'
+import opponentActions from '../store/actions/opponent.js'
+import gameActions from '../store/actions/game.js'
+import turnCycleActions from '../store/actions/turnCycle.js'
 
-const defaultGame = {
-  id: null,
-  passcode: null,
-  current_castle: null
-}
-const defaultUser = {
-  id: null,
-  castle_points: null,
-  screen_id: null,
-  soldiers_remaining: null,
-  sent_soldiers: null
-}
 const defaultPasscode = {
   passcode: ""
 }
 
 const GameContainer = (props) => {
-  const [game, setGame] = useState(defaultGame)
-  const [currentUser, setCurrentUser] = useState(defaultUser)
-  const [opponent, setOpponent] = useState(defaultUser)
-  const [currentPage, setCurrentPage] = useState("titleScreen")
-  const [gameScreenPage, setGameScreenPage] = useState('troopDeployForm')
+  const dispatch = useDispatch()
+  const currentUser = useSelector(state => state.currentUser)
+  const opponent = useSelector(state => state.opponent)
+  const game = useSelector(state => state.game)
+  const currentPage = useSelector(state => state.turnCycle.currentPage)
+  const gameScreenPage = useSelector(state => state.turnCycle.gameScreenPage)
+  const updateMessage = useSelector(state => state.turnCycle.updateMessage)
+  const nextStep = useSelector(state => state.turnCycle.nextStep)
+
+  const setCurrentUser = user => { dispatch(curUserActions.setCurrentUser(user)) }
+  const setOpponent = user => { dispatch(opponentActions.setOpponent(user)) }
+  const setGame = game => { dispatch(gameActions.setGame(game)) }
+  const setCurrentPage = page => { dispatch(turnCycleActions.setCurrentPage(page)) }
+  const setGameScreenPage = page => { dispatch(turnCycleActions.setGameScreenPage(page)) }
+  const setUpdateMessage = msg => { dispatch(turnCycleActions.setUpdateMessage(msg)) }
+  const setNextStep = step => { dispatch(turnCycleActions.setNextStep(step)) }
+
+  // const [game, setGame] = useState(defaultGame)
+  // const [currentUser, setCurrentUser] = useState(defaultUser)
+  // const [opponent, setOpponent] = useState(defaultUser)
+  // const [currentPage, setCurrentPage] = useState("titleScreen")
+  // const [gameScreenPage, setGameScreenPage] = useState('troopDeployForm')
   const [passcodeForm, setPasscodeForm] = useState(defaultPasscode)
-  const [updateMessage, setUpdateMessage] = useState("")
-  const [nextStep, setNextStep] = useState('')
+  // const [updateMessage, setUpdateMessage] = useState("")
+  // const [nextStep, setNextStep] = useState('')
 
   const handlePasscodeFormChange = (event) => {
     setPasscodeForm({
