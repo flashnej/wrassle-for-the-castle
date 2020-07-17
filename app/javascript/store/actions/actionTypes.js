@@ -7,3 +7,8 @@ export const RESET_READY = "RESET_READY"
 export const SET_OPPONENT = "SET_OPPONENT"
 
 export const SET_GAME = "SET_GAME"
+
+export const SET_CURRENT_PAGE = "SET_CURRENT_PAGE"
+export const SET_GAME_SCREEN_PAGE = "SET_GAME_SCREEN_PAGE"
+export const SET_UPDATE_MESSAGE = "SET_UPDATE_MESSAGE"
+export const SET_NEXT_STEP = "SET_NEXT_STEP"
