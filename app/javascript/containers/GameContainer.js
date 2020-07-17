@@ -18,7 +18,9 @@ const defaultUser = {
   castle_points: null,
   screen_id: null,
   soldiers_remaining: null,
-  sent_soldiers: null
+  sent_soldiers: null,
+  ready_for_battle: null,
+  ready_for_next_turn: null,
 }
 const defaultPasscode = {
   passcode: ""

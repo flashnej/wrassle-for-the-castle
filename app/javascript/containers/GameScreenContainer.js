@@ -9,7 +9,14 @@ const GameScreenContainer = (props) => {
 
   useEffect(() => {
     handleRefresh()
-  }, [opponent.updated_at])
+    console.log("auto-refresh triggered")
+  }, [
+    currentUser.ready_for_battle,
+    currentUser.ready_for_next_turn,
+    opponent.ready_for_battle,
+    opponent.ready_for_next_turn,
+    game.guest_id
+  ])
 
   let display = "Waiting for your opponent. Send a scout out to spy on them!"
   if (game.guest_id) {
@@ -83,6 +90,7 @@ const GameScreenContainer = (props) => {
         currentUser={currentUser}
         game={game}
         nextStep={nextStep}
+        setGameScreenPage={setGameScreenPage}
       />
     )
   }

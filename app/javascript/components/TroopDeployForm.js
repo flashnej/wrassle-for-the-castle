@@ -7,7 +7,7 @@ const TroopDeployForm = (props) => {
     if (props.game.guest_id) {
         display = ""
         presentation = (<div>
-        <h1> Castle Number: {props.game.current_castle}</h1>
+        <h1> Castle Number: {Math.ceil(props.game.current_castle)}</h1>
                 <form onSubmit={props.submitSoldiers}>
                     <label>How many troops would you like to send to castle #{props.game.current_castle}?
                     <input type="number" pattern="[0-9]*" onChange={props.handleChange} />
@@ -19,7 +19,7 @@ const TroopDeployForm = (props) => {
 
     return (
         <div>
-           {presentation} 
+           {presentation}
         </div>
     )
 }
