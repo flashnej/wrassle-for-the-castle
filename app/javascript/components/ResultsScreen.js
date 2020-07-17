@@ -20,6 +20,7 @@ const ResultsScreen = (props) => {
     return (
         <div>
             {presentation}
+            <button type="button" className="button" onClick={() => props.setGameScreenPage("troopDeployForm")}>Next Castle</button>
         </div>
     )
 }
