@@ -13,36 +13,21 @@ import opponentActions from '../store/actions/opponent.js'
 import gameActions from '../store/actions/game.js'
 import turnCycleActions from '../store/actions/turnCycle.js'
 
-const defaultPasscode = {
-  passcode: ""
-}
-
 const GameContainer = (props) => {
   const dispatch = useDispatch()
   const currentUser = useSelector(state => state.currentUser)
   const opponent = useSelector(state => state.opponent)
   const game = useSelector(state => state.game)
   const currentPage = useSelector(state => state.turnCycle.currentPage)
-  const gameScreenPage = useSelector(state => state.turnCycle.gameScreenPage)
   const updateMessage = useSelector(state => state.turnCycle.updateMessage)
-  const nextStep = useSelector(state => state.turnCycle.nextStep)
 
   const setCurrentUser = user => { dispatch(curUserActions.setCurrentUser(user)) }
   const setOpponent = user => { dispatch(opponentActions.setOpponent(user)) }
   const setGame = game => { dispatch(gameActions.setGame(game)) }
   const setCurrentPage = page => { dispatch(turnCycleActions.setCurrentPage(page)) }
-  const setGameScreenPage = page => { dispatch(turnCycleActions.setGameScreenPage(page)) }
   const setUpdateMessage = msg => { dispatch(turnCycleActions.setUpdateMessage(msg)) }
-  const setNextStep = step => { dispatch(turnCycleActions.setNextStep(step)) }
 
-  // const [game, setGame] = useState(defaultGame)
-  // const [currentUser, setCurrentUser] = useState(defaultUser)
-  // const [opponent, setOpponent] = useState(defaultUser)
-  // const [currentPage, setCurrentPage] = useState("titleScreen")
-  // const [gameScreenPage, setGameScreenPage] = useState('troopDeployForm')
-  const [passcodeForm, setPasscodeForm] = useState(defaultPasscode)
-  // const [updateMessage, setUpdateMessage] = useState("")
-  // const [nextStep, setNextStep] = useState('')
+  const [passcodeForm, setPasscodeForm] = useState("")
 
   const handlePasscodeFormChange = (event) => {
     setPasscodeForm({
@@ -102,20 +87,7 @@ const GameContainer = (props) => {
     showPage = (
       <div>
         <StatusMessage updateMessage={updateMessage}/>
-        <GameScreenContainer
-          setCurrentPage={setCurrentPage}
-          game={game}
-          setGame={setGame}
-          currentUser={currentUser}
-          setCurrentUser={setCurrentUser}
-          setUpdateMessage={setUpdateMessage}
-          gameScreenPage={gameScreenPage}
-          setGameScreenPage={setGameScreenPage}
-          opponent={opponent}
-          setOpponent={setOpponent}
-          nextStep={nextStep}
-          setNextStep={setNextStep}
-        />
+        <GameScreenContainer />
       </div>
     )
   } else if (currentPage === "victoryScreen") {

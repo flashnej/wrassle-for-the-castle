@@ -1,11 +1,30 @@
 import React, { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
 import TroopDeployForm from '../components/TroopDeployForm'
 import ResultsScreen from '../components/ResultsScreen'
 import RefreshButton from "../components/RefreshButton"
+import curUserActions from '../store/actions/currentUser.js'
+import opponentActions from '../store/actions/opponent.js'
+import gameActions from '../store/actions/game.js'
+import turnCycleActions from '../store/actions/turnCycle.js'
 
 const GameScreenContainer = (props) => {
-  const { currentUser, setCurrentUser, game, setGame, opponent, setOpponent, setUpdateMessage, gameScreenPage, setGameScreenPage, nextStep, setNextStep, setCurrentPage } = props
+  const dispatch = useDispatch()
+  const currentUser = useSelector(state => state.currentUser)
+  const opponent = useSelector(state => state.opponent)
+  const game = useSelector(state => state.game)
+  const gameScreenPage = useSelector(state => state.turnCycle.gameScreenPage)
+  const nextStep = useSelector(state => state.turnCycle.nextStep)
+
+  const setCurrentUser = user => { dispatch(curUserActions.setCurrentUser(user)) }
+  const setOpponent = user => { dispatch(opponentActions.setOpponent(user)) }
+  const setGame = game => { dispatch(gameActions.setGame(game)) }
+  const setCurrentPage = page => { dispatch(turnCycleActions.setCurrentPage(page)) }
+  const setGameScreenPage = page => { dispatch(turnCycleActions.setGameScreenPage(page)) }
+  const setUpdateMessage = msg => { dispatch(turnCycleActions.setUpdateMessage(msg)) }
+  const setNextStep = step => { dispatch(turnCycleActions.setNextStep(step)) }
+
   let display = "Waiting for your opponent. Send a scout out to spy on them!"
 
   if (game.guest_id) {
@@ -176,7 +195,7 @@ const GameScreenContainer = (props) => {
   return (
     <div>
       <div className="session-id">
-        Game Room: {props.game.passcode}
+        Game Room: {game.passcode}
       </div>
       {showPage}
     </div>
