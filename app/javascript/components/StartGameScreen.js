@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import Flip from 'react-reveal/Flip';
 
-import { subscribeToUserChannel } from '../channels/channel_helper'
+import { subscribeToGameChannel } from '../channels/channel_helper'
 
 const StartGameScreen = (props) => {
   const createNewGameFetch = () => {
@@ -27,7 +27,7 @@ const StartGameScreen = (props) => {
     .then((response) => response.json())
     .then((body) => {
       props.setGame(body.game)
-      subscribeToUserChannel(props.setOpponent, props.currentUser.id)
+      subscribeToGameChannel(props.setGame)
     })
   }
 

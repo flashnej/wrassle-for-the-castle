@@ -8,7 +8,7 @@ import curUserActions from '../store/actions/currentUser.js'
 import opponentActions from '../store/actions/opponent.js'
 import gameActions from '../store/actions/game.js'
 import turnCycleActions from '../store/actions/turnCycle.js'
-import { speakToUserChannel } from '../channels/channel_helper.js'
+import { speakToGameChannel } from '../channels/channel_helper.js'
 
 const GameScreenContainer = (props) => {
   const dispatch = useDispatch()
@@ -30,10 +30,8 @@ const GameScreenContainer = (props) => {
     handleRefresh()
     console.log("auto-refresh triggered")
   }, [
-    currentUser.ready_for_battle,
-    currentUser.ready_for_next_turn,
-    opponent.ready_for_battle,
-    opponent.ready_for_next_turn,
+    game.advance_to_castle,
+    game.advance_to_results,
     game.guest_id
   ])
 
@@ -145,7 +143,7 @@ const GameScreenContainer = (props) => {
       setGameScreenPage("resultsScreen")
       if (game != null) {
         console.log("speaking")
-        speakToUserChannel({ user: user })
+        speakToGameChannel({ game: game })
       }
     })
   }
