@@ -6,7 +6,8 @@ const defaultUserState = {
   screen_id: null,
   soldiers_remaining: null,
   sent_soldiers: null,
-  ready_for_battle: 0,
+  ready_for_battle: false,
+  ready_for_next_turn: false,
 }
 
 const reducer = (state = defaultUserState, action) => {

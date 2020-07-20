@@ -43,18 +43,19 @@ class V1::GamesController < ApplicationController
       opponent = User.find(opponent_id)
       # binding.pry
       current_castle_floor = game.current_castle.floor().to_i()
-      if current_user.ready_for_battle === current_castle_floor && opponent.ready_for_battle === current_castle_floor
+      if current_user.ready_for_battle === true && opponent.ready_for_battle === true
         next_step = "result"
-        game.current_castle = game.current_castle + 0.5
-        game.save
-      elsif current_user.ready_for_battle <= opponent.ready_for_battle && current_user.ready_for_battle != current_castle_floor
+        current_user.ready_for_battle = false
+        opponent.ready_for_battle = false
+      elsif current_user.ready_for_next_turn === true && opponent.ready_for_next_turn === true
         next_step = "form"
+        current_user.ready_for_next_turn = false
+        opponent.ready_for_next_turn = false
 
         if current_castle_floor === max_castles
           next_step = "victory"
-          if current_user.ready_for_battle === opponent.ready_for_battle
-            game_status = "over"
-          end
+        else
+          game.current_castle += 0.5
         end
       else
         # binding.pry
