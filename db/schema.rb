@@ -18,8 +18,8 @@ ActiveRecord::Schema.define(version: 2020_07_11_170047) do
   create_table "games", force: :cascade do |t|
     t.string "passcode", null: false
     t.float "current_castle"
-    t.boolean "advance_to_battle", default: false
-    t.boolean "advance_to_next_turn", default: false
+    t.float "advance_to_results"
+    t.float "advance_to_castle"
     t.bigint "host_id"
     t.bigint "guest_id"
     t.datetime "created_at", precision: 6, null: false

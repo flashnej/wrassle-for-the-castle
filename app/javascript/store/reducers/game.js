@@ -4,8 +4,8 @@ const defaultGameState = {
   id: null,
   passcode: null,
   current_castle: null,
-  advance_to_battle: false,
-  advance_to_next_turn: false,
+  advance_to_results: null,
+  advance_to_castle: null,
   guest_id: null
 }
 
