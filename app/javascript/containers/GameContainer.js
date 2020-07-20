@@ -27,7 +27,7 @@ const GameContainer = (props) => {
   const setCurrentPage = page => { dispatch(turnCycleActions.setCurrentPage(page)) }
   const setUpdateMessage = msg => { dispatch(turnCycleActions.setUpdateMessage(msg)) }
 
-  const [passcodeForm, setPasscodeForm] = useState("")
+  const [passcodeForm, setPasscodeForm] = useState({ passcode: "" })
 
   const handlePasscodeFormChange = (event) => {
     setPasscodeForm({
@@ -72,6 +72,7 @@ const GameContainer = (props) => {
         handleFormChange={handlePasscodeFormChange}
         passcodeForm={passcodeForm}
         currentUser={currentUser}
+        setOpponent={setOpponent}
       />
     )
   } else if (currentPage === "startGameScreen") {
@@ -81,6 +82,7 @@ const GameContainer = (props) => {
         game={game}
         setGame={setGame}
         currentUser={currentUser}
+        setOpponent={setOpponent}
       />
     )
   } else if (currentPage === "gameScreen") {

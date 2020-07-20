@@ -1,6 +1,8 @@
 import React from 'react'
 import Flip from 'react-reveal/Flip';
 
+import { subscribeToUserChannel, speakToUserChannel } from '../channels/channel_helper'
+
 const JoinGameScreen = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -21,6 +23,8 @@ const JoinGameScreen = (props) => {
         } else {
           props.setGame(body.game)
           props.setCurrentPage("gameScreen")
+          subscribeToUserChannel(props.setOpponent, props.currentUser.id)
+          if (props.currentUser != null) speakToUserChannel({ user: props.currentUser })
         }
       })
     }

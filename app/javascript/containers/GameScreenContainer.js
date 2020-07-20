@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import TroopDeployForm from '../components/TroopDeployForm'
@@ -8,6 +8,7 @@ import curUserActions from '../store/actions/currentUser.js'
 import opponentActions from '../store/actions/opponent.js'
 import gameActions from '../store/actions/game.js'
 import turnCycleActions from '../store/actions/turnCycle.js'
+import { speakToUserChannel } from '../channels/channel_helper.js'
 
 const GameScreenContainer = (props) => {
   const dispatch = useDispatch()
@@ -24,6 +25,17 @@ const GameScreenContainer = (props) => {
   const setGameScreenPage = page => { dispatch(turnCycleActions.setGameScreenPage(page)) }
   const setUpdateMessage = msg => { dispatch(turnCycleActions.setUpdateMessage(msg)) }
   const setNextStep = step => { dispatch(turnCycleActions.setNextStep(step)) }
+
+  useEffect(() => {
+    handleRefresh()
+    console.log("auto-refresh triggered")
+  }, [
+    currentUser.ready_for_battle,
+    currentUser.ready_for_next_turn,
+    opponent.ready_for_battle,
+    opponent.ready_for_next_turn,
+    game.guest_id
+  ])
 
   let display = "Waiting for your opponent. Send a scout out to spy on them!"
 
@@ -103,6 +115,7 @@ const GameScreenContainer = (props) => {
     const newSoldiersRemaining = currentUser.soldiers_remaining - currentUser.sent_soldiers
     const readyForBattleUser = {
       ...currentUser,
+      ready_for_battle: true,
       soldiers_remaining: newSoldiersRemaining
     }
 
@@ -130,6 +143,10 @@ const GameScreenContainer = (props) => {
       console.log("submit soldier, opponent:" + opponent.id)
       setCurrentUser(user)
       setGameScreenPage("resultsScreen")
+      if (game != null) {
+        console.log("speaking")
+        speakToUserChannel({ user: user })
+      }
     })
   }
 
