@@ -31,7 +31,8 @@ ActiveRecord::Schema.define(version: 2020_07_11_170047) do
     t.integer "soldiers_remaining", default: 100, null: false
     t.integer "sent_soldiers"
     t.integer "castle_points", default: 0, null: false
-    t.integer "ready_for_battle", default: 0
+    t.boolean "ready_for_battle", default: false
+    t.boolean "ready_for_next_turn", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
