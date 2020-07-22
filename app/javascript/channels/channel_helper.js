@@ -18,7 +18,7 @@ const subscribeToGameChannel = (setGame) => {
 }
 
 const speakToGameChannel = (game) => {
-  consumer.subscriptions.subscriptions[0].speak(game)
+  getChannelByName("GameChannel").speak(game)
 }
 
 const subscribeToUserChannel = (setOpponent, currentUserId) => {
@@ -43,7 +43,13 @@ const subscribeToUserChannel = (setOpponent, currentUserId) => {
 }
 
 const speakToUserChannel = (user) => {
-  consumer.subscriptions.subscriptions[0].speak(user)
+  getChannelByName("UserChannel").speak(user)
+}
+
+const getChannelByName = (channelName) => {
+  return consumer.subscriptions.subscriptions.find(subscription => {
+    return subscription.identifier.includes(channelName)
+  })
 }
 
 export {
