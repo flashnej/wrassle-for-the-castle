@@ -30,6 +30,7 @@ const StartGameScreen = (props) => {
 
   useEffect(() => {
     createNewGameFetch()
+    props.subscribeToUserChannel()
   },[])
 
   let gameShow = null

@@ -13,6 +13,8 @@ import opponentActions from '../store/actions/opponent.js'
 import gameActions from '../store/actions/game.js'
 import turnCycleActions from '../store/actions/turnCycle.js'
 
+import { subscribeToUserChannel } from '../channels/channel_helper'
+
 const defaultPasscode = {
   passcode: ""
 }
@@ -76,6 +78,7 @@ const GameContainer = (props) => {
         handleFormChange={handlePasscodeFormChange}
         passcodeForm={passcodeForm}
         currentUser={currentUser}
+        subscribeToUserChannel={() => subscribeToUserChannel(setOpponent, currentUser.id)}
       />
     )
   } else if (currentPage === "startGameScreen") {
@@ -85,6 +88,7 @@ const GameContainer = (props) => {
         game={game}
         setGame={setGame}
         currentUser={currentUser}
+        subscribeToUserChannel={() => subscribeToUserChannel(setOpponent, currentUser.id)}
       />
     )
   } else if (currentPage === "gameScreen") {

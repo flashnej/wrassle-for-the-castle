@@ -7,6 +7,7 @@ const JoinGameScreen = (props) => {
     if (props.passcodeForm.passcode.trim() === "") {
       alert("Please enter in the passcode your opponent provided you to join a game")
     } else {
+      props.subscribeToUserChannel()
       fetch(`/v1/games/${props.passcodeForm.passcode}/${props.currentUser.id}`)
       .then(response => {
         if (response.ok) {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import TroopDeployForm from '../components/TroopDeployForm'
@@ -8,6 +8,8 @@ import curUserActions from '../store/actions/currentUser.js'
 import opponentActions from '../store/actions/opponent.js'
 import gameActions from '../store/actions/game.js'
 import turnCycleActions from '../store/actions/turnCycle.js'
+
+import { speakToUserChannel } from '../channels/channel_helper'
 
 const GameScreenContainer = (props) => {
   const dispatch = useDispatch()
@@ -25,33 +27,46 @@ const GameScreenContainer = (props) => {
   const setUpdateMessage = msg => { dispatch(turnCycleActions.setUpdateMessage(msg)) }
   const setNextStep = step => { dispatch(turnCycleActions.setNextStep(step)) }
 
+  useEffect(() => {
+    if (opponent.id != null) {
+      console.log("opponent id: " + opponent.id)
+      setGameScreenPage("troopDeployForm")
+      fetchGame()
+    }
+    speakToUserChannel({ user: currentUser })
+  }, [opponent.id])
+
   let display = "Waiting for your opponent. Send a scout out to spy on them!"
 
   if (game.guest_id) {
     display = ""
   }
 
+  const fetchGame = () => {
+    fetch(`/v1/games/${game.passcode}`)
+    .then(response => {
+      if (response.ok) {
+        return response
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`
+        let error = new Error(errorMessage)
+        throw (error)
+      }
+    })
+    .then(response => response.json())
+    .then(body => {
+      if (!body.game.guest_id) {
+        setUpdateMessage("Your opponent isn't ready for battle yet. You may want to send more scouts out to check on them in a few seconds.")
+      } else {
+        setUpdateMessage("")
+        setGame(body.game)
+      }
+    })
+  }
+
   const handleRefresh = () => {
     if (!game.guest_id) {
-      fetch(`/v1/games/${game.passcode}`)
-      .then(response => {
-        if (response.ok) {
-          return response
-        } else {
-          let errorMessage = `${response.status} (${response.statusText})`
-          let error = new Error(errorMessage)
-          throw (error)
-        }
-      })
-      .then(response => response.json())
-      .then(body => {
-        if (!body.game.guest_id) {
-          setUpdateMessage("Your opponent isn't ready for battle yet. You may want to send more scouts out to check on them in a few seconds.")
-        } else {
-          setUpdateMessage("")
-          setGame(body.game)
-        }
-      })
+      fetchGame()
     } else {
       fetch(`/v1/games/${game.passcode}/${currentUser.id}/refresh`)
       .then(response => {
