@@ -36,6 +36,10 @@ const GameScreenContainer = (props) => {
     speakToUserChannel({ user: currentUser })
   }, [opponent.id])
 
+  useEffect(() => {
+    handleRefresh()
+  }, [currentUser.ready_for_battle, opponent.ready_for_battle])
+
   let display = "Waiting for your opponent. Send a scout out to spy on them!"
 
   if (game.guest_id) {
@@ -145,6 +149,7 @@ const GameScreenContainer = (props) => {
       console.log("submit soldier, opponent:" + opponent.id)
       setCurrentUser(user)
       setGameScreenPage("resultsScreen")
+      speakToUserChannel({ user: user })
     })
   }
 
