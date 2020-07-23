@@ -13,6 +13,10 @@ import opponentActions from '../store/actions/opponent.js'
 import gameActions from '../store/actions/game.js'
 import turnCycleActions from '../store/actions/turnCycle.js'
 
+const defaultPasscode = {
+  passcode: ""
+}
+
 const GameContainer = (props) => {
   const dispatch = useDispatch()
   const currentUser = useSelector(state => state.currentUser)
@@ -27,7 +31,7 @@ const GameContainer = (props) => {
   const setCurrentPage = page => { dispatch(turnCycleActions.setCurrentPage(page)) }
   const setUpdateMessage = msg => { dispatch(turnCycleActions.setUpdateMessage(msg)) }
 
-  const [passcodeForm, setPasscodeForm] = useState("")
+  const [passcodeForm, setPasscodeForm] = useState(defaultPasscode)
 
   const handlePasscodeFormChange = (event) => {
     setPasscodeForm({
