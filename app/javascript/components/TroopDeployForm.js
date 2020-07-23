@@ -2,8 +2,6 @@ import React from 'react'
 import Flip from 'react-reveal/Flip';
 import Pulse from 'react-reveal/Pulse';
 
-import RefreshButton from './RefreshButton'
-
 const TroopDeployForm = (props) => {
   let presentation
   let refreshClass
@@ -14,12 +12,8 @@ const TroopDeployForm = (props) => {
       <div>
         <img className="background" src={require('./background.jpg')} />
         <Flip bottom cascade>
-          <h5 className="message">Waiting for your opponent. Send a scout out to spy on them!</h5>
+          <h5 className="message">Our scouts are spying and waiting for your opponent's move...</h5>
         </Flip>
-        <RefreshButton
-          refreshClass={refreshClass}
-          clickHandler={props.refreshClickHandler}
-        />
       </div>
     )
   } else {
