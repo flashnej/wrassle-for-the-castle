@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Flip from 'react-reveal/Flip';
 
 const StartGameScreen = (props) => {
@@ -30,6 +30,7 @@ const StartGameScreen = (props) => {
 
   useEffect(() => {
     createNewGameFetch()
+    props.subscribeToUserChannel()
   },[])
 
   let gameShow = null

@@ -1,38 +1,76 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
 import TroopDeployForm from '../components/TroopDeployForm'
 import ResultsScreen from '../components/ResultsScreen'
 import RefreshButton from "../components/RefreshButton"
+import curUserActions from '../store/actions/currentUser.js'
+import opponentActions from '../store/actions/opponent.js'
+import gameActions from '../store/actions/game.js'
+import turnCycleActions from '../store/actions/turnCycle.js'
+
+import { speakToUserChannel } from '../channels/channel_helper'
 
 const GameScreenContainer = (props) => {
-  const { currentUser, setCurrentUser, game, setGame, opponent, setOpponent, setUpdateMessage, gameScreenPage, setGameScreenPage, nextStep, setNextStep, setCurrentPage } = props
+  const dispatch = useDispatch()
+  const currentUser = useSelector(state => state.currentUser)
+  const opponent = useSelector(state => state.opponent)
+  const game = useSelector(state => state.game)
+  const gameScreenPage = useSelector(state => state.turnCycle.gameScreenPage)
+  const nextStep = useSelector(state => state.turnCycle.nextStep)
+
+  const setCurrentUser = user => { dispatch(curUserActions.setCurrentUser(user)) }
+  const setOpponent = user => { dispatch(opponentActions.setOpponent(user)) }
+  const setGame = game => { dispatch(gameActions.setGame(game)) }
+  const setCurrentPage = page => { dispatch(turnCycleActions.setCurrentPage(page)) }
+  const setGameScreenPage = page => { dispatch(turnCycleActions.setGameScreenPage(page)) }
+  const setUpdateMessage = msg => { dispatch(turnCycleActions.setUpdateMessage(msg)) }
+  const setNextStep = step => { dispatch(turnCycleActions.setNextStep(step)) }
+
+  useEffect(() => {
+    if (opponent.id != null) {
+      console.log("opponent id: " + opponent.id)
+      setGameScreenPage("troopDeployForm")
+      fetchGame()
+    }
+    speakToUserChannel({ user: currentUser })
+  }, [opponent.id])
+
+  useEffect(() => {
+    handleRefresh()
+  }, [currentUser.ready_for_battle, opponent.ready_for_battle])
+
   let display = "Waiting for your opponent. Send a scout out to spy on them!"
 
   if (game.guest_id) {
     display = ""
   }
 
+  const fetchGame = () => {
+    fetch(`/v1/games/${game.passcode}`)
+    .then(response => {
+      if (response.ok) {
+        return response
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`
+        let error = new Error(errorMessage)
+        throw (error)
+      }
+    })
+    .then(response => response.json())
+    .then(body => {
+      if (!body.game.guest_id) {
+        setUpdateMessage("Your opponent isn't ready for battle yet. You may want to send more scouts out to check on them in a few seconds.")
+      } else {
+        setUpdateMessage("")
+        setGame(body.game)
+      }
+    })
+  }
+
   const handleRefresh = () => {
     if (!game.guest_id) {
-      fetch(`/v1/games/${game.passcode}`)
-      .then(response => {
-        if (response.ok) {
-          return response
-        } else {
-          let errorMessage = `${response.status} (${response.statusText})`
-          let error = new Error(errorMessage)
-          throw (error)
-        }
-      })
-      .then(response => response.json())
-      .then(body => {
-        if (!body.game.guest_id) {
-          setUpdateMessage("Your opponent isn't ready for battle yet. You may want to send more scouts out to check on them in a few seconds.")
-        } else {
-          setUpdateMessage("")
-          setGame(body.game)
-        }
-      })
+      fetchGame()
     } else {
       fetch(`/v1/games/${game.passcode}/${currentUser.id}/refresh`)
       .then(response => {
@@ -111,6 +149,7 @@ const GameScreenContainer = (props) => {
       console.log("submit soldier, opponent:" + opponent.id)
       setCurrentUser(user)
       setGameScreenPage("resultsScreen")
+      speakToUserChannel({ user: user })
     })
   }
 
@@ -176,7 +215,7 @@ const GameScreenContainer = (props) => {
   return (
     <div>
       <div className="session-id">
-        Game Room: {props.game.passcode}
+        Game Room: {game.passcode}
       </div>
       {showPage}
     </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
 import TitleScreen from '../components/TitleScreen'
 import StartGameScreen from '../components/StartGameScreen'
@@ -7,32 +8,32 @@ import GameScreenContainer from './GameScreenContainer'
 import VictoryScreen from '../components/VictoryScreen'
 import RefreshButton from '../components/RefreshButton'
 import StatusMessage from '../components/StatusMessage'
+import curUserActions from '../store/actions/currentUser.js'
+import opponentActions from '../store/actions/opponent.js'
+import gameActions from '../store/actions/game.js'
+import turnCycleActions from '../store/actions/turnCycle.js'
 
-const defaultGame = {
-  id: null,
-  passcode: null,
-  current_castle: null
-}
-const defaultUser = {
-  id: null,
-  castle_points: null,
-  screen_id: null,
-  soldiers_remaining: null,
-  sent_soldiers: null
-}
+import { subscribeToUserChannel } from '../channels/channel_helper'
+
 const defaultPasscode = {
   passcode: ""
 }
 
 const GameContainer = (props) => {
-  const [game, setGame] = useState(defaultGame)
-  const [currentUser, setCurrentUser] = useState(defaultUser)
-  const [opponent, setOpponent] = useState(defaultUser)
-  const [currentPage, setCurrentPage] = useState("titleScreen")
-  const [gameScreenPage, setGameScreenPage] = useState('troopDeployForm')
+  const dispatch = useDispatch()
+  const currentUser = useSelector(state => state.currentUser)
+  const opponent = useSelector(state => state.opponent)
+  const game = useSelector(state => state.game)
+  const currentPage = useSelector(state => state.turnCycle.currentPage)
+  const updateMessage = useSelector(state => state.turnCycle.updateMessage)
+
+  const setCurrentUser = user => { dispatch(curUserActions.setCurrentUser(user)) }
+  const setOpponent = user => { dispatch(opponentActions.setOpponent(user)) }
+  const setGame = game => { dispatch(gameActions.setGame(game)) }
+  const setCurrentPage = page => { dispatch(turnCycleActions.setCurrentPage(page)) }
+  const setUpdateMessage = msg => { dispatch(turnCycleActions.setUpdateMessage(msg)) }
+
   const [passcodeForm, setPasscodeForm] = useState(defaultPasscode)
-  const [updateMessage, setUpdateMessage] = useState("")
-  const [nextStep, setNextStep] = useState('')
 
   const handlePasscodeFormChange = (event) => {
     setPasscodeForm({
@@ -77,6 +78,7 @@ const GameContainer = (props) => {
         handleFormChange={handlePasscodeFormChange}
         passcodeForm={passcodeForm}
         currentUser={currentUser}
+        subscribeToUserChannel={() => subscribeToUserChannel(setOpponent, currentUser.id)}
       />
     )
   } else if (currentPage === "startGameScreen") {
@@ -86,26 +88,14 @@ const GameContainer = (props) => {
         game={game}
         setGame={setGame}
         currentUser={currentUser}
+        subscribeToUserChannel={() => subscribeToUserChannel(setOpponent, currentUser.id)}
       />
     )
   } else if (currentPage === "gameScreen") {
     showPage = (
       <div>
         <StatusMessage updateMessage={updateMessage}/>
-        <GameScreenContainer
-          setCurrentPage={setCurrentPage}
-          game={game}
-          setGame={setGame}
-          currentUser={currentUser}
-          setCurrentUser={setCurrentUser}
-          setUpdateMessage={setUpdateMessage}
-          gameScreenPage={gameScreenPage}
-          setGameScreenPage={setGameScreenPage}
-          opponent={opponent}
-          setOpponent={setOpponent}
-          nextStep={nextStep}
-          setNextStep={setNextStep}
-        />
+        <GameScreenContainer />
       </div>
     )
   } else if (currentPage === "victoryScreen") {
