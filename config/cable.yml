@@ -6,5 +6,4 @@ test:
 
 production:
   adapter: redis
-  url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } %>
-  channel_prefix: wrassle_for_the_castle_production
+  url: redis://redistogo:d87b0405cb681155b59e4f4d77e494a0@pearlfish.redistogo.com:10459/
